@@ -1,56 +1,51 @@
-⚙️ FreeRTOS STM32F103 – 2 Task UART
-1️⃣ Giới thiệu
+FreeRTOS STM32F103 – UART 2 Task Print
+📌 Mô tả dự án
 
-Dự án sử dụng FreeRTOS trên STM32F103C8T6 với 2 Task cùng gửi dữ liệu qua UART1.
+Project sử dụng FreeRTOS trên STM32F103C8T6 gồm 2 tác vụ gửi dữ liệu qua UART1:
+✅ Task A
+Gửi chuỗi "AAAAA\r\n"
+Chu kỳ 50ms
+✅ Task B
+Gửi chuỗi "bbbbb\r\n"
+Chu kỳ 70ms
+Hai Task truy cập chung UART → dữ liệu sẽ xen kẽ khi hiển thị trên Serial Terminal.
 
-✅ Mỗi Task gửi một chuỗi riêng → Quan sát dữ liệu xen kẽ trên Serial Monitor.
+🧩 Sử dụng FreeRTOS
+Thành phần	Mục đích
+Task	Chạy song song hai chức năng
+vTaskDelay	Tạo chu kỳ gửi dữ liệu
+Scheduler	Quản lý phân chia CPU cho task
 
-2️⃣ Chức năng từng Task
-Task	Chuỗi gửi	Chu kỳ gửi
-Task A	AAAAA\r\n	50 ms
-Task B	bbbbb\r\n	70 ms
-3️⃣ Sơ đồ chân UART1 sử dụng
-Chân STM32	Chức năng
+📍 Sơ đồ chân UART1
+Chân	Chức năng
 PA9	USART1_TX
 PA10	USART1_RX
-GND	GND chung với USB–TTL
+GND	Chung GND với USB-TTL
 
-Kết nối với USB–UART như sau:
+Kết nối:
+STM32 PA9  → RX USB-TTL
+STM32 PA10 → TX USB-TTL
+STM32 GND → GND USB-TTL
 
-STM32 PA9  ---->  RX USB-TTL
-STM32 PA10 ---->  TX USB-TTL
-STM32 GND ---->  GND USB-TTL
+
+🔌 Yêu cầu phần cứng
+
+STM32F103C8T6 (Blue Pill)
+
+Bộ chuyển USB-TTL
+
+Dây nối TX/RX
 
 
-Baudrate: 9600 8N1
+🛠️ Yêu cầu phần mềm
 
-4️⃣ Thư viện sử dụng
+Keil / STM32CubeIDE / PlatformIO
 
-stm32f10x.h
+FreeRTOS + STM32 Standard Peripheral Library
 
-stm32f10x_usart.h
 
-FreeRTOS.h
+🚀 Nâng cấp thêm
 
-task.h
+Dùng Mutex bảo vệ UART → tránh tranh chấp tài nguyên
 
-5️⃣ Luồng hoạt động hệ thống
-+--------------+         +--------------+
-|   Task A     |         |   Task B     |
-| UART Print   |         | UART Print   |
-| "AAAAA"      |         | "bbbbb"      |
-+------+-------+         +-------+------+
-       |                         |
-       +-----------+-------------+
-                   |
-                UART1 TX
-                   |
-               Serial Monitor
-
-6️⃣ Hướng phát triển
-
-✅ Thêm Mutex bảo vệ tài nguyên UART
-
-✅ Thêm Task đọc UART
-
-✅ Mở rộng debug qua Queue hoặc StreamBuffer
+Đổi độ ưu tiên Task để thử thay đổi tần suất xen kẽ
