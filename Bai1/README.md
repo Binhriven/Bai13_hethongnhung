@@ -1,38 +1,67 @@
-FreeRTOS STM32F103 – LED Blink & Alert
+- FreeRTOS STM32F103 – LED Blink & Alert Button Interrupt
+- 📌 Mô tả dự án
 
-Chương trình sử dụng FreeRTOS trên STM32F103C8T6 gồm 2 nhiệm vụ:
+- Project sử dụng FreeRTOS trên STM32F103C8T6 gồm 2 tác vụ chính:
 
-LED nháy tại chân PA5 mỗi 1 giây
+- LED Blink Task
 
-Khi nhấn nút tại chân PC13 thì LED cảnh báo tại PA6 sáng trong 2 giây
+- Nhấp nháy LED (PA5) mỗi 1 giây
 
-Sử dụng Queue và Semaphore để truyền tín hiệu từ ngắt sang Task xử lý.
-Ngắt sử dụng EXTI13 để phát hiện nút nhấn.
+- Alert Task
 
-Chân sử dụng:
+- Khi nhấn nút (PC13 - nút User trên board Blue Pill)
 
-PA5: LED nháy
+- Gửi tín hiệu qua Queue và Semaphore
 
-PA6: LED cảnh báo
+- LED cảnh báo (PA6) sáng 2 giây rồi tắt
 
-PC13: Nút nhấn
+- Ngoài ra project sử dụng External Interrupt (EXTI13) để bắt sự kiện nhấn nút.
 
-Yêu cầu phần cứng:
+- 🧩 Sử dụng tài nguyên FreeRTOS  
+Thành phần	Mục đích  
+Task	LED Blink Task & Alert Task  
+Queue	Truyền lệnh từ ISR → Task xử lý  
+Binary Semaphore	Đồng bộ hóa ISR → Task  
+ISR	Xử lý ngắt nút nhấn
 
-Blue Pill STM32F103C8T6
+- 📍 Sơ đồ chân  
+Chân	Chức năng  
+PA5	LED blink  
+PA6	LED alert  
+PC13	Button input
 
-2 LED và điện trở hạn dòng
+- ⚙️ Cấu trúc mã nguồn  
+.  
+├── Core Code  
+│   ├── main.c  
+│   ├── FreeRTOS tasks  
+│   ├── Interrupt handler  
+├── README.md
 
-Nút nhấn PC13 trên board
+- ✅ Yêu cầu phần cứng
 
-Yêu cầu phần mềm:
+- STM32F103C8T6 (Blue Pill)
 
-Keil uVision hoặc STM32CubeIDE
+- 2 LED + điện trở hạn dòng
 
-FreeRTOS và thư viện Standard Peripheral Library
+- Nút nhấn tích hợp sẵn PC13
 
-Cách hoạt động:
+- ✅ Yêu cầu phần mềm
 
-Chạy chương trình → LED PA5 nháy liên tục
+- Keil uVision / STM32CubeIDE / PlatformIO
 
-Khi nhấn nút PC13 → LED PA6 sáng 2 giây rồi tắt
+- FreeRTOS + Standard Peripheral Library (SPL)
+
+- 🛠 Hướng dẫn build
+
+- Clone project
+
+- Import vào IDE
+
+- Compile và flash lên MCU
+
+- Quan sát:
+
+- PA5 nháy định kỳ
+
+- Nhấn nút → PA6 sáng 2 giây
